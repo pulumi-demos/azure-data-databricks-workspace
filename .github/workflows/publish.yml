@@ -1,0 +1,44 @@
+name: Build and Publish Component
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.0)'
+        required: true
+        type: string
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Pulumi
+        uses: pulumi/actions@v5
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: components/databricks-workspace
+
+      - name: Build component
+        run: dotnet build --configuration Release --no-restore
+        working-directory: components/databricks-workspace
+
+      - name: Publish to Pulumi Registry
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: |
+          cd components/databricks-workspace
+          pulumi package publish . --readme ./README.md
