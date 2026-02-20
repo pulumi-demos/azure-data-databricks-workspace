@@ -82,6 +82,14 @@ public sealed class DatabricksWorkspaceComponentArgs : Pulumi.ResourceArgs
     /// </summary>
     [Input("costCenter")]
     public Input<string>? CostCenter { get; set; }
+
+    /// <summary>
+    /// Data classification level for the workspace.
+    /// Controls security and compliance posture. Valid values: "public", "internal", "confidential", "restricted".
+    /// Defaults to "internal".
+    /// </summary>
+    [Input("dataClassification")]
+    public Input<string>? DataClassification { get; set; }
 }
 
 /// <summary>
@@ -177,6 +185,7 @@ public class DatabricksWorkspaceComponent : ComponentResource
         var enablePublicAccess = args.EnablePublicAccess ?? false;
         var environment = args.Environment ?? "dev";
         var costCenter = args.CostCenter ?? "unassigned";
+        var dataClassification = args.DataClassification ?? "internal";
 
         // Build compliance tags - these are mandatory for all resources
         // User-provided tags are included, but compliance tags always take precedence
@@ -184,6 +193,7 @@ public class DatabricksWorkspaceComponent : ComponentResource
         baseTags["team"] = teamName;
         baseTags["environment"] = environment;
         baseTags["cost-center"] = costCenter;
+        baseTags["data-classification"] = dataClassification;
         baseTags["managed-by"] = "pulumi";
         baseTags["component"] = "databricks-workspace";
 
