@@ -166,6 +166,12 @@ public class DatabricksWorkspaceComponent : ComponentResource
     public Output<string> ManagedResourceGroupName { get; private set; } = null!;
 
     /// <summary>
+    /// The name of the Databricks workspace resource.
+    /// </summary>
+    [Output("workspaceName")]
+    public Output<string> WorkspaceName { get; private set; } = null!;
+
+    /// <summary>
     /// Network configuration details for the workspace.
     /// </summary>
     [Output("networkConfig")]
@@ -355,6 +361,7 @@ public class DatabricksWorkspaceComponent : ComponentResource
         // Set outputs
         WorkspaceUrl = workspace.WorkspaceUrl;
         WorkspaceId = workspace.WorkspaceId;
+        WorkspaceName = workspace.Name;
         ResourceGroupName = resourceGroup.Name;
         ManagedResourceGroupName = managedRgName;
         NetworkConfiguration = Output.Tuple(vnet.Id, privateSubnet.Id, publicSubnet.Id).Apply(t =>
@@ -365,6 +372,7 @@ public class DatabricksWorkspaceComponent : ComponentResource
         {
             { "workspaceUrl", WorkspaceUrl },
             { "workspaceId", WorkspaceId },
+            { "workspaceName", WorkspaceName },
             { "resourceGroupName", ResourceGroupName },
             { "managedResourceGroupName", ManagedResourceGroupName },
             { "networkConfig", NetworkConfiguration },

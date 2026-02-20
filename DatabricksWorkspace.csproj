@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>azure-data-databricks-workspace</AssemblyName>
     <RootNamespace>DatabricksWorkspace</RootNamespace>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
