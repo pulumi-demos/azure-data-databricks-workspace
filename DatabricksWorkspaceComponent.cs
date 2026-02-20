@@ -242,13 +242,16 @@ public class DatabricksWorkspaceComponent : ComponentResource
         });
 
         // Create NSG for Databricks private subnet
+        // Note: IgnoreChanges on securityRules and tags because Databricks manages its own
+        // security rules on these NSGs after workspace creation. Any subsequent PUT to update
+        // tags would include the Databricks-managed rules in a format Azure rejects.
         var privateNsg = new NetworkSecurityGroup($"{name}-private-nsg", new NetworkSecurityGroupArgs
         {
             NetworkSecurityGroupName = Output.Format($"nsg-dbw-private-{teamName}-{environment}"),
             ResourceGroupName = resourceGroup.Name,
             Location = location,
             Tags = baseTags,
-        }, new CustomResourceOptions { Parent = this });
+        }, new CustomResourceOptions { Parent = this, IgnoreChanges = { "securityRules", "tags" } });
 
         // Create NSG for Databricks public subnet
         var publicNsg = new NetworkSecurityGroup($"{name}-public-nsg", new NetworkSecurityGroupArgs
@@ -257,7 +260,7 @@ public class DatabricksWorkspaceComponent : ComponentResource
             ResourceGroupName = resourceGroup.Name,
             Location = location,
             Tags = baseTags,
-        }, new CustomResourceOptions { Parent = this });
+        }, new CustomResourceOptions { Parent = this, IgnoreChanges = { "securityRules", "tags" } });
 
         // Create private subnet for Databricks (worker nodes)
         var privateSubnet = new Subnet($"{name}-private-subnet", new SubnetArgs
