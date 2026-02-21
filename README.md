@@ -2,6 +2,20 @@
 
 A multi-language Pulumi component that creates a compliant, network-isolated Azure Databricks workspace following enterprise best practices.
 
+## What's New in v0.0.4
+
+**v0.0.4** - Added `workspaceName` output for easier cross-stack referencing.
+
+**v0.0.3** - **Data Classification Tags**: New optional `dataClassification` input propagates a `data-classification` tag to all provisioned resources. Supports values like `public`, `internal`, `confidential`, and `restricted` to meet regulatory and compliance requirements out of the box.
+
+```python
+workspace = DatabricksWorkspaceComponent("analytics",
+    team_name="data-science",
+    data_classification="confidential",   # new in v0.0.3
+    # ...
+)
+```
+
 ## Features
 
 - **VNet Injection**: Deploys Databricks into your own VNet for network isolation
@@ -95,6 +109,7 @@ outputs:
 | `enablePublicAccess` | bool | No | Enable public access (default: false) |
 | `environment` | string | No | Environment name (default: "dev") |
 | `costCenter` | string | No | Cost center for chargeback |
+| `dataClassification` | string | No | Data classification level (e.g., `public`, `internal`, `confidential`, `restricted`) |
 | `tags` | map | No | Additional tags |
 
 ## Outputs
@@ -102,6 +117,7 @@ outputs:
 | Name | Type | Description |
 |------|------|-------------|
 | `workspaceUrl` | string | Databricks workspace URL |
+| `workspaceName` | string | Databricks workspace name |
 | `workspaceId` | string | Databricks workspace ID |
 | `resourceGroupName` | string | Resource group name |
 | `managedResourceGroupName` | string | Managed resource group name |
